@@ -17,28 +17,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.curso.gato.model.Gato;
 import com.curso.gato.service.GatoService;
-import com.curso.gato.service.GatoServiceImpl;
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 
 @RestController
 @RequestMapping(path = "cats")
 public class GatoController {
-	
 	
 	@Autowired
 	GatoService gatoService;
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Gato> findAll() {
-		return gatoService.findAll();
+		return gatoService.findAllJoin();
 	}
 	
 	@GetMapping(value="{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Gato findOne(@PathVariable long id) {
-		return gatoService.findOne(id);
+		return gatoService.findById(id).orElse(null);
+	}
+	@GetMapping(value="edad/{id}", produces = MediaType.TEXT_PLAIN_VALUE)
+	public String getEdad(@PathVariable long id) {
+		return gatoService.getEdad(id).toString();
 	}
 	
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -52,8 +50,8 @@ public class GatoController {
 		gatoService.update(gato);
 	}
 	
-	@DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void delete(@RequestBody Gato gato) {
-		gatoService.delete(gato);
+	@DeleteMapping(value="{id}")
+	public void delete(@PathVariable long id) {
+		gatoService.delete(id);
 	}
 }

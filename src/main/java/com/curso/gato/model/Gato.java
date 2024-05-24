@@ -6,9 +6,12 @@ import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Gato implements Serializable {
@@ -20,7 +23,9 @@ public class Gato implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	private String nombre;
-	private String raza;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "raza")
+	private Raza raza;
 	@Column(name = "fecha_nacimiento")
 	private LocalDate fechaNacimiento;
 	
@@ -31,13 +36,13 @@ public class Gato implements Serializable {
 		this.id = id;
 	}
 	
-	public Gato(String nombre, String raza, LocalDate fechaNacimiento) {
+	public Gato(String nombre, Raza raza, LocalDate fechaNacimiento) {
 		this.nombre = nombre;
 		this.raza = raza;
 		this.fechaNacimiento = fechaNacimiento;
 	}
 	
-	public Gato(long id, String nombre, String raza, LocalDate fechaNacimiento) {
+	public Gato(long id, String nombre, Raza raza, LocalDate fechaNacimiento) {
 		this.id = id;
 		this.nombre = nombre;
 		this.raza = raza;
@@ -56,10 +61,10 @@ public class Gato implements Serializable {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-	public String getRaza() {
+	public Raza getRaza() {
 		return raza;
 	}
-	public void setRaza(String raza) {
+	public void setRaza(Raza raza) {
 		this.raza = raza;
 	}
 	public LocalDate getFechaNacimiento() {
